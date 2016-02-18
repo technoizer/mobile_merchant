@@ -60,7 +60,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:text="Login"
+            android:text="Simpan"
             android:background="@android:color/holo_green_dark"
             style="@style/Base.TextAppearance.AppCompat.Widget.Button.Inverse"
             android:layout_width="match_parent"

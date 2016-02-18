@@ -59,8 +59,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
             <ImageButton
-                android:layout_width="44dp"
-                android:layout_height="31dp"
+                android:layout_width="40dp"
+                android:layout_height="25dp"
                 android:scaleType="fitCenter"
                 android:id="@+id/locationButton"
                 android:src="@drawable/pointer"
@@ -83,8 +83,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <ImageButton
-                    android:layout_width="44dp"
-                    android:layout_height="31dp"
+                    android:layout_width="40dp"
+                    android:layout_height="25dp"
                     android:scaleType="fitCenter"
                     android:id="@+id/callButton"
                     android:src="@drawable/phone"
@@ -107,8 +107,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <ImageButton
-                    android:layout_width="44dp"
-                    android:layout_height="31dp"
+                    android:layout_width="40dp"
+                    android:layout_height="25dp"
                     android:scaleType="fitCenter"
                     android:id="@+id/reportButton"
                     android:src="@drawable/notebook"
