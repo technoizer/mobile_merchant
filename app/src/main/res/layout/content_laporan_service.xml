@@ -42,17 +42,12 @@
             android:id="@+id/catatan"
             android:layout_marginBottom="15dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Total Harga"
-            android:id="@+id/title_total_harga" />
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:id="@+id/layout_password">
+            android:id="@+id/layout_password"
+            android:hint="Total Harga">
 
 
         <EditText
@@ -62,7 +57,7 @@
             android:ems="10"
             android:id="@+id/editText2"
             android:layout_marginBottom="15dp"/>
-        <android.su
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:text="Login"
