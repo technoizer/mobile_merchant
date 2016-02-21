@@ -7,42 +7,43 @@ import java.io.Serializable;
  */
 public class NewRequest implements Serializable {
 
-    private String tanggal, namaCustomer, noHpCustomer, lokasi, jenisServis, Catatan, latLng;
-    private Integer idRequest;
+    private String tanggalrequest, namacustomer, nohp, lokasi, namajasa, catatancustomer, latLng;
+    private Integer id;
 
-    public NewRequest(String tanggal, String namaCustomer, String noHpCustomer, String lokasi, String jenisServis, String catatan, String latLng, Integer idRequest) {
-        this.tanggal = tanggal;
-        this.namaCustomer = namaCustomer;
-        this.noHpCustomer = noHpCustomer;
+    public NewRequest(String tanggalrequest, String namacustomer, String nohp, String lokasi, String namajasa, String catatancustomer, String latLng, Integer id) {
+        this.tanggalrequest = tanggalrequest;
+        this.namacustomer = namacustomer;
+        this.nohp = nohp;
         this.lokasi = lokasi;
-        this.jenisServis = jenisServis;
-        Catatan = catatan;
+        this.namajasa = namajasa;
+        this.catatancustomer = catatancustomer;
         this.latLng = latLng;
-        this.idRequest = idRequest;
+        this.id = id;
     }
 
-    public String getTanggal() {
-        return tanggal;
+
+    public String getTanggalrequest() {
+        return tanggalrequest;
     }
 
-    public void setTanggal(String tanggal) {
-        this.tanggal = tanggal;
+    public void setTanggalrequest(String tanggalrequest) {
+        this.tanggalrequest = tanggalrequest;
     }
 
-    public String getNamaCustomer() {
-        return namaCustomer;
+    public String getNamacustomer() {
+        return namacustomer;
     }
 
-    public void setNamaCustomer(String namaCustomer) {
-        this.namaCustomer = namaCustomer;
+    public void setNamacustomer(String namacustomer) {
+        this.namacustomer = namacustomer;
     }
 
-    public String getNoHpCustomer() {
-        return noHpCustomer;
+    public String getNohp() {
+        return nohp;
     }
 
-    public void setNoHpCustomer(String noHpCustomer) {
-        this.noHpCustomer = noHpCustomer;
+    public void setNohp(String nohp) {
+        this.nohp = nohp;
     }
 
     public String getLokasi() {
@@ -53,20 +54,20 @@ public class NewRequest implements Serializable {
         this.lokasi = lokasi;
     }
 
-    public String getJenisServis() {
-        return jenisServis;
+    public String getNamajasa() {
+        return namajasa;
     }
 
-    public void setJenisServis(String jenisServis) {
-        this.jenisServis = jenisServis;
+    public void setNamajasa(String namajasa) {
+        this.namajasa = namajasa;
     }
 
-    public String getCatatan() {
-        return Catatan;
+    public String getCatatancustomer() {
+        return catatancustomer;
     }
 
-    public void setCatatan(String catatan) {
-        Catatan = catatan;
+    public void setCatatancustomer(String catatancustomer) {
+        this.catatancustomer = catatancustomer;
     }
 
     public String getLatLng() {
@@ -77,11 +78,15 @@ public class NewRequest implements Serializable {
         this.latLng = latLng;
     }
 
-    public Integer getIdRequest() {
-        return idRequest;
+    public Integer getId() {
+        return id;
     }
 
-    public void setIdRequest(Integer idRequest) {
-        this.idRequest = idRequest;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String toString (){
+        return getId() + " " + getCatatancustomer();
     }
 }

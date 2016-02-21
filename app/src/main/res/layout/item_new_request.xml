@@ -1,36 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16dp"
+    android:background="@drawable/cards_bg"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <TextView
+        android:layout_marginTop="4dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/tanggal_servis"
+        android:text="20/02/2016"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:layout_marginBottom="4dp"
+        style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
         android:id="@+id/nama_customer"
-        android:text="Nama Customer"
+        android:text="Demsy"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
+        android:layout_marginBottom="4dp"
+        android:textStyle="bold"
+        android:layout_below="@id/nama_customer"
         android:id="@+id/jenis_servis"
-        android:text="Jenis Servis"
+        android:text="Servis Setan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
+        android:layout_marginBottom="4dp"
         android:id="@+id/lokasi_servis"
-        android:text="Lokasi"
+        android:layout_below="@id/jenis_servis"
+        android:text="Lokasi : Jln Kusuma Bangsa, Surabaya"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/catatan_servis"
-        android:text="Deskripsi"
+        android:id="@+id/caption_des"
+        android:layout_below="@id/lokasi_servis"
+        android:text="Deskripsi :"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <ImageButton
-        android:id="@+id/view_map_other"
+    <LinearLayout
+        android:layout_marginBottom="8dp"
+        android:padding="8dp"
+        android:id="@+id/layout_des"
+        android:layout_below="@id/caption_des"
+        android:divider="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_dialog_map"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/catatan_servis"
+            android:text="Deskripsiaaaaaaaaaaaaaaaaaaaaaaaa\nasdasaaaaaaaaaaaaaaaaaaad\nasaaaaaaaaaaaaaaaaaaaad\nasdasdasd\nasdasdasd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_below="@id/layout_des"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/span"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </LinearLayout>
+        <Button
+            android:layout_marginRight="8dp"
+            android:background="#df4136"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Inverse"
+            android:text="Tolak"
+            android:layout_weight="1"
+            android:id="@+id/tolak"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/ambil"
+            android:layout_marginLeft="8dp"
+            android:background="#41df36"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Inverse"
+            android:text="Ambil"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,15 +1,66 @@
 package id.ac.its.alpro.merchant;
 
+import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresPermission;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.google.gson.Gson;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import id.ac.its.alpro.merchant.component.Auth;
+import id.ac.its.alpro.merchant.databaseHandler.MySQLiteHelper;
 
 public class LoginActivity extends AppCompatActivity {
+
+    Button login;
+    EditText email;
+    EditText password;
+    Result result;
+    TextInputLayout email_l, password_l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +69,22 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        login = (Button)findViewById(R.id.login);
+        email = (EditText)findViewById(R.id.email);
+        password = (EditText)findViewById(R.id.password);
+        email_l = (TextInputLayout)findViewById(R.id.layout_email);
+        password_l = (TextInputLayout)findViewById(R.id.layout_password);
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //MySQLiteHelper db = new MySQLiteHelper(getApplicationContext());
+                if(validateEmail() && validatePassword()){
+                    new MyAsyncTask().execute("hehe");
+                }
+            }
+        });
     }
 
     @Override
@@ -40,5 +107,139 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class MyAsyncTask extends AsyncTask<String, Integer, Double> {
+        private ProgressDialog dialog;
+
+        public MyAsyncTask(){
+            dialog = new ProgressDialog(LoginActivity.this);
+        }
+        @Override
+        protected Double doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            postData();
+            return null;
+        }
+
+        protected void onPostExecute(Double result) {
+            //Toast.makeText(getApplicationContext(), "command sent",Toast.LENGTH_LONG).show();
+            dialog.dismiss();
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Please Wait a Moment...");
+            dialog.show();
+        }
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        public void postData() {
+
+            ArrayList<NameValuePair> postParameters;
+            HttpClient httpclient = new DefaultHttpClient();
+            String url = "http://servisin.au-syd.mybluemix.net/api/admin";
+            HttpPost httpPost = new HttpPost(url);
+
+            postParameters = new ArrayList<NameValuePair>();
+            postParameters.add(new BasicNameValuePair("username", email.getText().toString().trim()));
+            postParameters.add(new BasicNameValuePair("password", password.getText().toString().trim()));
+
+            Log.d("URL", url);
+
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+                HttpResponse response = httpclient.execute(httpPost);
+                Reader reader = new InputStreamReader(response.getEntity().getContent(), "UTF-8");
+                Log.d("TES", getStringFromInputStream(reader));
+//                Gson baru = new Gson();
+//
+//                result = baru.fromJson(reader, Result.class);
+//                Log.d("Hehe", result.getStatus() + " " + result.getToken());
+
+            } catch (ClientProtocolException e) {
+            } catch (IOException e) {
+            }
+            finally {
+            }
+        }
+    }
+
+    public class Result{
+        String status, token;
+
+        public Result(String status, String token) {
+            this.status = status;
+            this.token = token;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+    }
+
+    private boolean validateEmail(){
+        if (email.getText().toString().trim().isEmpty()) {
+            email_l.setError("Masukkan Email Anda!");
+            return false;
+        } else {
+            email_l.setErrorEnabled(false);
+        }
+        return true;
+    }
+
+    private boolean validatePassword(){
+        if (password.getText().toString().trim().isEmpty()) {
+            password_l.setError("Masukkan Password Anda!");
+            return false;
+        } else {
+            password_l.setErrorEnabled(false);
+        }
+        return true;
+    }
+
+    private static String getStringFromInputStream(Reader is) {
+
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+
+        String line;
+        try {
+
+            br = new BufferedReader(is);
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return sb.toString();
     }
 }

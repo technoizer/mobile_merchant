@@ -1,5 +1,12 @@
 package id.ac.its.alpro.merchant;
 
+import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Entity;
+import android.content.Intent;
+import android.location.Location;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -11,13 +18,37 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+
+import id.ac.its.alpro.merchant.adaptor.NewRequestListAdaptor;
+import id.ac.its.alpro.merchant.component.NewRequest;
 
 public class NewRequestActivity extends AppCompatActivity {
 
@@ -30,6 +61,9 @@ public class NewRequestActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private static List<NewRequest> broadcast = new ArrayList<>();
+    private static List<NewRequest> direct = new ArrayList<>();
+    private static String TOKEN = "4DqvO9OVJBTTTbe5Go2kGYYIDGwP8rabA17gPi5ceMCD7mq5mxXevrOMdRAN";
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -47,16 +81,22 @@ public class NewRequestActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         tabs = (TabLayout) findViewById(R.id.tabs);
 
-
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        tabs.setupWithViewPager(mViewPager);
-        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
+        refreshContent();
+
+        ImageButton tmp = (ImageButton) findViewById(R.id.refreshBtn);
+        tmp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshContent();
+            }
+        });
     }
 
 
@@ -111,8 +151,16 @@ public class NewRequestActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_new_request, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            ListView listView = (ListView) rootView.findViewById(R.id.fragmenList);
+            int section = getArguments().getInt(ARG_SECTION_NUMBER);
+            if (section == 1){
+                NewRequestListAdaptor adaptor = new NewRequestListAdaptor(getContext(),R.layout.item_new_request,broadcast, section);
+                listView.setAdapter(adaptor);
+            }
+            else{
+                NewRequestListAdaptor adaptor = new NewRequestListAdaptor(getContext(),R.layout.item_new_request,direct, section);
+                listView.setAdapter(adaptor);
+            }
             return rootView;
         }
     }
@@ -149,6 +197,105 @@ public class NewRequestActivity extends AppCompatActivity {
                     return "DIRECT";
             }
             return null;
+        }
+    }
+
+    private class MyAsyncTask extends AsyncTask<String, Integer, Double> {
+        private ProgressDialog dialog;
+
+        public MyAsyncTask(){
+            dialog = new ProgressDialog(NewRequestActivity.this);
+        }
+        @Override
+        protected Double doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            postData();
+            return null;
+        }
+
+        protected void onPostExecute(Double result) {
+            //Toast.makeText(getApplicationContext(), "command sent",Toast.LENGTH_LONG).show();
+            dialog.dismiss();
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+            tabs.setupWithViewPager(mViewPager);
+            tabs.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Please Wait a Moment...");
+            dialog.show();
+        }
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        public void postData() {
+            // Create a new HttpClient and Post Header
+            HttpClient httpclient = new DefaultHttpClient();
+            String url = "http://servisin.au-syd.mybluemix.net/api/provider/recentrequest/"+TOKEN;
+            HttpGet httpGet = new HttpGet(url);
+            Log.d("URL", url);
+
+            try {
+                HttpResponse response = httpclient.execute(httpGet);
+                Reader reader = new InputStreamReader(response.getEntity().getContent(), "UTF-8");
+                Gson baru = new Gson();
+
+                Request request = baru.fromJson(reader, Request.class);
+
+                Log.d("Hehe", request.getBroadcast().get(0).toString());
+                for (int i = 0; i < request.broadcast.size(); i++){
+                    broadcast.add(request.getBroadcast().get(i));
+                }
+
+                for (int i = 0; i < request.direct.size(); i++){
+                    direct.add(request.getDirect().get(i));
+                }
+
+            } catch (ClientProtocolException e) {
+            } catch (IOException e) {
+            }
+            finally {
+            }
+        }
+    }
+
+    public void refreshContent() {
+
+        broadcast.clear();
+        direct.clear();
+
+        new MyAsyncTask().execute("hehe");
+
+    }
+
+    private static class Request{
+        private List<NewRequest> direct, broadcast;
+
+        public Request(List<NewRequest> direct, List<NewRequest> broadcast) {
+            this.direct = direct;
+            this.broadcast = broadcast;
+        }
+
+        public List<NewRequest> getDirect() {
+            return direct;
+        }
+
+        public void setDirect(List<NewRequest> direct) {
+            this.direct = direct;
+        }
+
+        public List<NewRequest> getBroadcast() {
+            return broadcast;
+        }
+
+        public void setBroadcast(List<NewRequest> broadcast) {
+            this.broadcast = broadcast;
         }
     }
 }

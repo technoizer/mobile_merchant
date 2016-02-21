@@ -60,35 +60,12 @@
             android:layout_height="wrap_content" />
 
         <Button
+            android:id="@+id/login"
             android:text="Login"
             android:background="#ef4136"
             style="@style/Base.TextAppearance.AppCompat.Widget.Button.Inverse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:padding="10dp"
-        android:background="@color/colorPrimary"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:textColor="#ffffff"
-            android:textAlignment="center"
-            android:text="Don't have an account ?   "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/signupBtn"
-            android:textColor="#ffffff"
-            android:text="SIGN UP!"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 </RelativeLayout>
