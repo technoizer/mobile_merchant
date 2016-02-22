@@ -2,6 +2,7 @@ package id.ac.its.alpro.merchant;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -59,8 +61,8 @@ public class LoginActivity extends AppCompatActivity {
     Button login;
     EditText email;
     EditText password;
-    Result result;
     TextInputLayout email_l, password_l;
+    MySQLiteHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,16 +72,26 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        db = new MySQLiteHelper(getApplicationContext());
+        Auth auth = new Auth();
+
         login = (Button)findViewById(R.id.login);
         email = (EditText)findViewById(R.id.email);
         password = (EditText)findViewById(R.id.password);
         email_l = (TextInputLayout)findViewById(R.id.layout_email);
         password_l = (TextInputLayout)findViewById(R.id.layout_password);
 
+        auth = db.get(1);
+        if(auth.getId() != null && auth.getToken() != null && auth.getStatus() != null && auth.getStatus().equals("success")){
+            Intent i = new Intent(this,NewRequestActivity.class);
+            i.putExtra("Auth", auth);
+            startActivity(i);
+        }
+        db.close();
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //MySQLiteHelper db = new MySQLiteHelper(getApplicationContext());
                 if(validateEmail() && validatePassword()){
                     new MyAsyncTask().execute("hehe");
                 }
@@ -111,6 +123,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private class MyAsyncTask extends AsyncTask<String, Integer, Double> {
         private ProgressDialog dialog;
+        private int status = 0;
+        private Result result;
 
         public MyAsyncTask(){
             dialog = new ProgressDialog(LoginActivity.this);
@@ -122,9 +136,26 @@ public class LoginActivity extends AppCompatActivity {
             return null;
         }
 
-        protected void onPostExecute(Double result) {
-            //Toast.makeText(getApplicationContext(), "command sent",Toast.LENGTH_LONG).show();
+        protected void onPostExecute(Double res) {
             dialog.dismiss();
+            if (status == 200){
+                db = new MySQLiteHelper(getApplicationContext());
+                Auth tmp = db.get(1);
+                Auth auth = new Auth(1,email.getText().toString().trim(),password.getText().toString().trim(), result.getToken(),result.status);
+                if (tmp.getId() != null && tmp.getStatus().equals("expired")){
+                    db.update(auth);
+                }
+                else{
+                    db.insert(auth);
+                }
+
+                Intent i = new Intent(getApplicationContext(),NewRequestActivity.class);
+                i.putExtra("Auth", auth);
+                startActivity(i);
+                db.close();
+            }
+            else
+                Toast.makeText(getApplicationContext(),"Oops.., Something went wrong, Try Again Later :)",Toast.LENGTH_SHORT).show();
         }
 
         protected void onProgressUpdate(Integer... progress) {
@@ -149,19 +180,22 @@ public class LoginActivity extends AppCompatActivity {
             postParameters = new ArrayList<NameValuePair>();
             postParameters.add(new BasicNameValuePair("username", email.getText().toString().trim()));
             postParameters.add(new BasicNameValuePair("password", password.getText().toString().trim()));
+            postParameters.add(new BasicNameValuePair("sebagai", "3"));
 
             Log.d("URL", url);
 
             try {
                 httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
                 HttpResponse response = httpclient.execute(httpPost);
-                Reader reader = new InputStreamReader(response.getEntity().getContent(), "UTF-8");
-                Log.d("TES", getStringFromInputStream(reader));
-//                Gson baru = new Gson();
-//
-//                result = baru.fromJson(reader, Result.class);
-//                Log.d("Hehe", result.getStatus() + " " + result.getToken());
+                status = response.getStatusLine().getStatusCode();
+                if (status == 200){
+                    Reader reader = new InputStreamReader(response.getEntity().getContent(), "UTF-8");
+                    //Log.d("TES", getStringFromInputStream(reader));
+                    Gson baru = new Gson();
 
+                    result = baru.fromJson(reader, Result.class);
+                    Log.d("Hehe", result.getStatus() + " " + result.getToken());
+                }
             } catch (ClientProtocolException e) {
             } catch (IOException e) {
             }
@@ -213,33 +247,5 @@ public class LoginActivity extends AppCompatActivity {
             password_l.setErrorEnabled(false);
         }
         return true;
-    }
-
-    private static String getStringFromInputStream(Reader is) {
-
-        BufferedReader br = null;
-        StringBuilder sb = new StringBuilder();
-
-        String line;
-        try {
-
-            br = new BufferedReader(is);
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return sb.toString();
     }
 }

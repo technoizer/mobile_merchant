@@ -62,6 +62,6 @@ public class Auth implements Serializable{
     }
 
     public String toString(){
-        return getUsername() + " " + getToken();
+        return getUsername() + " " + getToken() + " " + getStatus();
     }
 }

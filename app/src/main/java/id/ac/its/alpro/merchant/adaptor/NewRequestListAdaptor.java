@@ -61,14 +61,14 @@ public class NewRequestListAdaptor extends ArrayAdapter<NewRequest> {
         holder.lokasi_servis.setText("Lokasi : " + holder.item.getLokasi());
         if (mode == 1){
             holder.tolak.setVisibility(View.GONE);
-            holder.urlAmbil = "huehueheu";
-            holder.ambil.setTag(holder);
+            holder.item.setUrlAmbil("http://servisin.au-syd.mybluemix.net/api/provider/ambilbroadcast/" + holder.item.getId());
+            holder.ambil.setTag(holder.item);
         }
         else{
             holder.span.setVisibility(View.GONE);
-            holder.urlAmbil = "huehueheu2";
-            holder.ambil.setTag(holder);
-            holder.tolak.setTag(holder);
+            holder.item.setUrlAmbil("http://servisin.au-syd.mybluemix.net/provider/ambildirect/" + holder.item.getId());
+            holder.ambil.setTag(holder.item);
+            holder.tolak.setTag(holder.item);
         }
     }
 
@@ -80,7 +80,6 @@ public class NewRequestListAdaptor extends ArrayAdapter<NewRequest> {
         TextView catatan_servis;
         TextView lokasi_servis;
         Button tolak, ambil;
-        String urlAmbil;
         LinearLayout span;
     }
 }

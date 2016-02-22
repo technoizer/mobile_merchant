@@ -1,14 +1,12 @@
 package id.ac.its.alpro.merchant;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Entity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,19 +35,17 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import id.ac.its.alpro.merchant.asynctask.AsyncTaskLogout;
 import id.ac.its.alpro.merchant.adaptor.NewRequestListAdaptor;
+import id.ac.its.alpro.merchant.component.Auth;
 import id.ac.its.alpro.merchant.component.NewRequest;
 
 public class NewRequestActivity extends AppCompatActivity {
@@ -63,7 +61,7 @@ public class NewRequestActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private static List<NewRequest> broadcast = new ArrayList<>();
     private static List<NewRequest> direct = new ArrayList<>();
-    private static String TOKEN = "4DqvO9OVJBTTTbe5Go2kGYYIDGwP8rabA17gPi5ceMCD7mq5mxXevrOMdRAN";
+    private static String TOKEN;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -81,6 +79,9 @@ public class NewRequestActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+
+        Auth auth = (Auth) getIntent().getSerializableExtra("Auth");
+        TOKEN = auth.getToken();
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         tabs = (TabLayout) findViewById(R.id.tabs);
@@ -109,18 +110,16 @@ public class NewRequestActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_logout) {
+            new AsyncTaskLogout(this, NewRequestActivity.this,TOKEN).execute("hehe");
+            Log.d("TOKEN", TOKEN);
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      * A placeholder fragment containing a simple view.
@@ -200,10 +199,10 @@ public class NewRequestActivity extends AppCompatActivity {
         }
     }
 
-    private class MyAsyncTask extends AsyncTask<String, Integer, Double> {
+    private class AsyncTaskList extends AsyncTask<String, Integer, Double> {
         private ProgressDialog dialog;
 
-        public MyAsyncTask(){
+        public AsyncTaskList(){
             dialog = new ProgressDialog(NewRequestActivity.this);
         }
         @Override
@@ -214,12 +213,10 @@ public class NewRequestActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Double result) {
-            //Toast.makeText(getApplicationContext(), "command sent",Toast.LENGTH_LONG).show();
             dialog.dismiss();
             mViewPager.setAdapter(mSectionsPagerAdapter);
             tabs.setupWithViewPager(mViewPager);
             tabs.setTabGravity(TabLayout.GRAVITY_FILL);
-
         }
 
         protected void onProgressUpdate(Integer... progress) {
@@ -235,7 +232,6 @@ public class NewRequestActivity extends AppCompatActivity {
 
         @TargetApi(Build.VERSION_CODES.KITKAT)
         public void postData() {
-            // Create a new HttpClient and Post Header
             HttpClient httpclient = new DefaultHttpClient();
             String url = "http://servisin.au-syd.mybluemix.net/api/provider/recentrequest/"+TOKEN;
             HttpGet httpGet = new HttpGet(url);
@@ -270,7 +266,7 @@ public class NewRequestActivity extends AppCompatActivity {
         broadcast.clear();
         direct.clear();
 
-        new MyAsyncTask().execute("hehe");
+        new AsyncTaskList().execute("hehe");
 
     }
 
@@ -297,5 +293,33 @@ public class NewRequestActivity extends AppCompatActivity {
         public void setBroadcast(List<NewRequest> broadcast) {
             this.broadcast = broadcast;
         }
+    }
+
+    public void ambilRequestHandler(View v)
+    {
+        final Dialog myDialog = new Dialog(this);
+        myDialog.setTitle("Ambil Request");
+        myDialog.setContentView(R.layout.dialog_ambil_request);
+        myDialog.setCancelable(false);
+        EditText nama_customer = (EditText) myDialog.findViewById(R.id.nama_customer);
+        EditText lokasi = (EditText) myDialog.findViewById(R.id.lokasi_servis);
+        EditText jenis_servis = (EditText) myDialog.findViewById(R.id.jenis_servis);
+        Button ambil = (Button) myDialog.findViewById(R.id.dialog_ambil);
+        Button batal = (Button) myDialog.findViewById(R.id.dialog_batal);
+        NewRequest request = (NewRequest) v.getTag();
+        Log.d("URL", request.getUrlAmbil());
+        nama_customer.setText(request.getNamacustomer());
+        lokasi.setText(request.getLokasi());
+        jenis_servis.setText(request.getNamajasa());
+
+        batal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+            }
+        });
+
+        myDialog.show();
+
     }
 }

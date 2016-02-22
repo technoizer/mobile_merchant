@@ -34,7 +34,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
 
     public MySQLiteHelper(Context context){
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -71,6 +71,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     public Auth get(int id){
         SQLiteDatabase db = this.getReadableDatabase();
+        Auth auth = new Auth();
         Cursor cursor =
                 db.query(TABLE_AUTH, // a. table
                         COLUMNS, // b. column names
@@ -83,14 +84,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         if (cursor != null)
             cursor.moveToFirst();
 
-        Auth auth = new Auth();
-        auth.setId(Integer.parseInt(cursor.getString(0)));
-        auth.setUsername(cursor.getString(1));
-        auth.setPassword(cursor.getString(2));
-        auth.setToken(cursor.getString(3));
-        auth.setStatus(cursor.getString(4));
+        try {
+            auth.setId(Integer.parseInt(cursor.getString(0)));
+            auth.setUsername(cursor.getString(1));
+            auth.setPassword(cursor.getString(2));
+            auth.setToken(cursor.getString(3));
+            auth.setStatus(cursor.getString(4));
 
-        Log.d("get(" + id + ")", auth.toString());
+            Log.d("get(" + id + ")", auth.toString());
+        }
+        catch (Exception e){
+
+        }
+
         return auth;
     }
 

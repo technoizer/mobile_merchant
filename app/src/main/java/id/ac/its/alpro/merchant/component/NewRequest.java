@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class NewRequest implements Serializable {
 
-    private String tanggalrequest, namacustomer, nohp, lokasi, namajasa, catatancustomer, latLng;
+    private String tanggalrequest, namacustomer, nohp, lokasi, namajasa, catatancustomer, latLng, urlAmbil;;
     private Integer id;
 
     public NewRequest(String tanggalrequest, String namacustomer, String nohp, String lokasi, String namajasa, String catatancustomer, String latLng, Integer id) {
@@ -21,6 +21,13 @@ public class NewRequest implements Serializable {
         this.id = id;
     }
 
+    public String getUrlAmbil() {
+        return urlAmbil;
+    }
+
+    public void setUrlAmbil(String urlAmbil) {
+        this.urlAmbil = urlAmbil;
+    }
 
     public String getTanggalrequest() {
         return tanggalrequest;
