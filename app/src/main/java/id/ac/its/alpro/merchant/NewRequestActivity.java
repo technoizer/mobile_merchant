@@ -1,10 +1,10 @@
 package id.ac.its.alpro.merchant;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.app.TimePickerDialog;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
@@ -24,10 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.google.gson.Gson;
 
@@ -41,33 +42,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import id.ac.its.alpro.merchant.asynctask.AsyncTaskLogout;
 import id.ac.its.alpro.merchant.adaptor.NewRequestListAdaptor;
 import id.ac.its.alpro.merchant.component.Auth;
-import id.ac.its.alpro.merchant.component.NewRequest;
 
 public class NewRequestActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private static List<NewRequest> broadcast = new ArrayList<>();
-    private static List<NewRequest> direct = new ArrayList<>();
+    private static List<id.ac.its.alpro.merchant.component.Request> broadcast = new ArrayList<>();
+    private static List<id.ac.its.alpro.merchant.component.Request> direct = new ArrayList<>();
     private static String TOKEN;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
     private TabLayout tabs;
+    private int hour, minute;
+    private EditText jamservis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +68,6 @@ public class NewRequestActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
 
         Auth auth = (Auth) getIntent().getSerializableExtra("Auth");
         TOKEN = auth.getToken();
@@ -86,7 +75,6 @@ public class NewRequestActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         tabs = (TabLayout) findViewById(R.id.tabs);
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
 
         refreshContent();
@@ -98,13 +86,14 @@ public class NewRequestActivity extends AppCompatActivity {
                 refreshContent();
             }
         });
-    }
 
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_new_request, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -120,24 +109,13 @@ public class NewRequestActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
+
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -147,27 +125,24 @@ public class NewRequestActivity extends AppCompatActivity {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_new_request, container, false);
             ListView listView = (ListView) rootView.findViewById(R.id.fragmenList);
             int section = getArguments().getInt(ARG_SECTION_NUMBER);
             if (section == 1){
                 NewRequestListAdaptor adaptor = new NewRequestListAdaptor(getContext(),R.layout.item_new_request,broadcast, section);
                 listView.setAdapter(adaptor);
+                listView.setEmptyView(rootView.findViewById(R.id.empty));
             }
             else{
                 NewRequestListAdaptor adaptor = new NewRequestListAdaptor(getContext(),R.layout.item_new_request,direct, section);
                 listView.setAdapter(adaptor);
+                listView.setEmptyView(rootView.findViewById(R.id.empty));
             }
             return rootView;
         }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -227,6 +202,7 @@ public class NewRequestActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             dialog.setMessage("Please Wait a Moment...");
+            dialog.setCancelable(false);
             dialog.show();
         }
 
@@ -242,7 +218,7 @@ public class NewRequestActivity extends AppCompatActivity {
                 Reader reader = new InputStreamReader(response.getEntity().getContent(), "UTF-8");
                 Gson baru = new Gson();
 
-                Request request = baru.fromJson(reader, Request.class);
+                NewRequest request = baru.fromJson(reader, NewRequest.class);
 
                 Log.d("Hehe", request.getBroadcast().get(0).toString());
                 for (int i = 0; i < request.broadcast.size(); i++){
@@ -270,33 +246,32 @@ public class NewRequestActivity extends AppCompatActivity {
 
     }
 
-    private static class Request{
-        private List<NewRequest> direct, broadcast;
+    private static class NewRequest{
+        private List<id.ac.its.alpro.merchant.component.Request> direct, broadcast;
 
-        public Request(List<NewRequest> direct, List<NewRequest> broadcast) {
+        public NewRequest(List<id.ac.its.alpro.merchant.component.Request> direct, List<id.ac.its.alpro.merchant.component.Request> broadcast) {
             this.direct = direct;
             this.broadcast = broadcast;
         }
 
-        public List<NewRequest> getDirect() {
+        public List<id.ac.its.alpro.merchant.component.Request> getDirect() {
             return direct;
         }
 
-        public void setDirect(List<NewRequest> direct) {
+        public void setDirect(List<id.ac.its.alpro.merchant.component.Request> direct) {
             this.direct = direct;
         }
 
-        public List<NewRequest> getBroadcast() {
+        public List<id.ac.its.alpro.merchant.component.Request> getBroadcast() {
             return broadcast;
         }
 
-        public void setBroadcast(List<NewRequest> broadcast) {
+        public void setBroadcast(List<id.ac.its.alpro.merchant.component.Request> broadcast) {
             this.broadcast = broadcast;
         }
     }
 
-    public void ambilRequestHandler(View v)
-    {
+    public void ambilRequestHandler(View v) {
         final Dialog myDialog = new Dialog(this);
         myDialog.setTitle("Ambil Request");
         myDialog.setContentView(R.layout.dialog_ambil_request);
@@ -304,9 +279,10 @@ public class NewRequestActivity extends AppCompatActivity {
         EditText nama_customer = (EditText) myDialog.findViewById(R.id.nama_customer);
         EditText lokasi = (EditText) myDialog.findViewById(R.id.lokasi_servis);
         EditText jenis_servis = (EditText) myDialog.findViewById(R.id.jenis_servis);
+        jamservis = (EditText)myDialog.findViewById(R.id.jam_servis);
         Button ambil = (Button) myDialog.findViewById(R.id.dialog_ambil);
         Button batal = (Button) myDialog.findViewById(R.id.dialog_batal);
-        NewRequest request = (NewRequest) v.getTag();
+        id.ac.its.alpro.merchant.component.Request request = (id.ac.its.alpro.merchant.component.Request) v.getTag();
         Log.d("URL", request.getUrlAmbil());
         nama_customer.setText(request.getNamacustomer());
         lokasi.setText(request.getLokasi());
@@ -319,7 +295,38 @@ public class NewRequestActivity extends AppCompatActivity {
             }
         });
 
+        jamservis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar c = Calendar.getInstance();
+                hour = c.get(Calendar.HOUR_OF_DAY);
+                minute = c.get(Calendar.MINUTE);
+                Dialog tmp = new TimePickerDialog(NewRequestActivity.this, timePickerListener, hour, minute, true);
+                tmp.show();
+            }
+        });
+
+        jamservis.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                final Calendar c = Calendar.getInstance();
+                hour = c.get(Calendar.HOUR_OF_DAY);
+                minute = c.get(Calendar.MINUTE);
+                Dialog tmp = new TimePickerDialog(NewRequestActivity.this, timePickerListener, hour, minute, true);
+                tmp.show();
+            }
+        });
+
         myDialog.show();
 
     }
+
+    private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int selectedHourOfDay, int selectedMinute) {
+            hour = selectedHourOfDay;
+            minute = selectedMinute;
+            jamservis.setText(new StringBuilder().append(hour < 10 ? "0" + hour : hour).append(":").append(minute < 10 ? "0" + minute : minute));
+        }
+    };
 }

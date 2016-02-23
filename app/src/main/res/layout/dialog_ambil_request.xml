@@ -54,7 +54,8 @@
         android:id="@+id/jam_servis_layout">
         <EditText
             android:id="@+id/jam_servis"
-            android:inputType="text"
+            android:editable="false"
+            android:inputType="none"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Jam Sanggup Servis (hari ini)"/>

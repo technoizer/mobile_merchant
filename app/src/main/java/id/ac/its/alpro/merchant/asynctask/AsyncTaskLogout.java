@@ -62,6 +62,7 @@ public class AsyncTaskLogout extends AsyncTask<String, Integer, Double> {
     protected void onPreExecute() {
         super.onPreExecute();
         dialog.setMessage("Logging Out...");
+        dialog.setCancelable(false);
         dialog.show();
     }
 

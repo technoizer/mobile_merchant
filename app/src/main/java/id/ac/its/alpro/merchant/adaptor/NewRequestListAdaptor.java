@@ -13,18 +13,18 @@ import android.widget.TextView;
 import java.util.List;
 
 import id.ac.its.alpro.merchant.R;
-import id.ac.its.alpro.merchant.component.NewRequest;
+import id.ac.its.alpro.merchant.component.Request;
 
 /**
  * Created by ALPRO on 31/12/2015.
  */
-public class NewRequestListAdaptor extends ArrayAdapter<NewRequest> {
-    private List<NewRequest> items;
+public class NewRequestListAdaptor extends ArrayAdapter<Request> {
+    private List<Request> items;
     private int layoutResourceId;
     private Context context;
     private int mode;
 
-    public NewRequestListAdaptor(Context context, int layoutResourceId, List<NewRequest> items, int mode){
+    public NewRequestListAdaptor(Context context, int layoutResourceId, List<Request> items, int mode){
         super(context, layoutResourceId, items);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -73,7 +73,7 @@ public class NewRequestListAdaptor extends ArrayAdapter<NewRequest> {
     }
 
     public static class NewRequestHolder{
-        NewRequest item;
+        Request item;
         TextView nama_customer;
         TextView jenis_servis;
         TextView tanggal_servis;

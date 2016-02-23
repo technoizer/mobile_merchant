@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
+    android:padding="16dp"
+    android:background="@drawable/cards_bg"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -16,22 +18,21 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Nama pelanggan"
+            android:textStyle="bold"
             android:id="@+id/nama_pelanggan" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Feb, 15 at 9:09pm"
-            android:id="@+id/tanggal"
-            android:layout_marginBottom="8dp"/>
-
+            android:text="Jenis Service"
+            android:id="@+id/jenis_service" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Jenis Service"
-            android:id="@+id/jenis_service" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Feb, 15 at 9:09pm"
+            android:id="@+id/tanggal"/>
     </LinearLayout>
 
     <LinearLayout
@@ -44,15 +45,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <ImageButton
-                android:layout_width="44dp"
-                android:layout_height="31dp"
+                android:layout_width="40dp"
+                android:layout_height="25dp"
                 android:scaleType="fitCenter"
                 android:id="@+id/locationButton"
                 android:src="@drawable/pointer"
                 android:layout_marginBottom="0dp"
                 android:background="@null"
-                android:onClick="getCustomerLocation"
-                />
+                android:onClick="getCustomerLocation"/>
             <TextView
                 android:layout_width="match_parent"
                 android:textAlignment="center"
@@ -60,16 +60,15 @@
                 android:text="location"
                 android:textSize="10dp"
                 android:layout_marginTop="0dp"
-                android:textColor="@android:color/darker_gray"
-                />
+                android:textColor="@android:color/darker_gray"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <ImageButton
-                android:layout_width="44dp"
-                android:layout_height="31dp"
+                android:layout_width="40dp"
+                android:layout_height="25dp"
                 android:scaleType="fitCenter"
                 android:id="@+id/callButton"
                 android:src="@drawable/phone"
@@ -92,8 +91,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <ImageButton
-                android:layout_width="44dp"
-                android:layout_height="31dp"
+                android:layout_width="40dp"
+                android:layout_height="25dp"
                 android:scaleType="fitCenter"
                 android:id="@+id/reportButton"
                 android:src="@drawable/notebook"

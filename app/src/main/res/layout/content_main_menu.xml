@@ -19,7 +19,7 @@
         android:weightSum="1">
 
         <ImageView
-            android:layout_width="283dp"
+            android:layout_width="200dp"
             android:layout_height="230dp"
             android:id="@+id/imageView"
             android:layout_gravity="center_horizontal"
@@ -30,8 +30,7 @@
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            >
+            android:layout_gravity="center">
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -39,6 +38,8 @@
                 android:src="@drawable/phone"
                 android:onClick="requestBaru"/>
             <ImageButton
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageButton1"

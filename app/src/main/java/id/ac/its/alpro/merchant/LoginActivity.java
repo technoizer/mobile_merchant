@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = db.get(1);
         if(auth.getId() != null && auth.getToken() != null && auth.getStatus() != null && auth.getStatus().equals("success")){
-            Intent i = new Intent(this,NewRequestActivity.class);
+            Intent i = new Intent(this,MainMenuActivity.class);
             i.putExtra("Auth", auth);
             startActivity(i);
         }
@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                     db.insert(auth);
                 }
 
-                Intent i = new Intent(getApplicationContext(),NewRequestActivity.class);
+                Intent i = new Intent(getApplicationContext(),MainMenuActivity.class);
                 i.putExtra("Auth", auth);
                 startActivity(i);
                 db.close();
