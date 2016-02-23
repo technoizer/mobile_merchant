@@ -55,18 +55,18 @@ public class NewRequestListAdaptor extends ArrayAdapter<Request> {
 
     private void setupItem(NewRequestHolder holder){
         holder.nama_customer.setText(String.valueOf(holder.item.getNamacustomer()));
-        holder.jenis_servis.setText(holder.item.getNamajasa());
+        holder.jenis_servis.setText(holder.item.getTipejasa());
         holder.catatan_servis.setText(holder.item.getCatatancustomer());
         holder.tanggal_servis.setText(holder.item.getTanggalrequest());
         holder.lokasi_servis.setText("Lokasi : " + holder.item.getLokasi());
         if (mode == 1){
             holder.tolak.setVisibility(View.GONE);
-            holder.item.setUrlAmbil("http://servisin.au-syd.mybluemix.net/api/provider/ambilbroadcast/" + holder.item.getId());
+            holder.item.setUrlAmbil("http://servisin.au-syd.mybluemix.net/api/provider/ambilbroadcast/" + holder.item.getBroadcast_id() + "/");
             holder.ambil.setTag(holder.item);
         }
         else{
             holder.span.setVisibility(View.GONE);
-            holder.item.setUrlAmbil("http://servisin.au-syd.mybluemix.net/provider/ambildirect/" + holder.item.getId());
+            holder.item.setUrlAmbil("http://servisin.au-syd.mybluemix.net/api/provider/ambildirect/" + holder.item.getDirect_id() + "/");
             holder.ambil.setTag(holder.item);
             holder.tolak.setTag(holder.item);
         }

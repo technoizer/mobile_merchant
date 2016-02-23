@@ -49,7 +49,7 @@ public class AsyncTaskLogout extends AsyncTask<String, Integer, Double> {
         //Toast.makeText(getApplicationContext(), "command sent",Toast.LENGTH_LONG).show();
         dialog.dismiss();
         Intent intent = new Intent(context,LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mainActivity.startActivity(intent);
         mainActivity.finish();
     }

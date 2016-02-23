@@ -1,13 +1,13 @@
 package id.ac.its.alpro.merchant;
 
 import android.annotation.TargetApi;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -24,19 +24,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -48,6 +52,7 @@ import java.util.List;
 import id.ac.its.alpro.merchant.asynctask.AsyncTaskLogout;
 import id.ac.its.alpro.merchant.adaptor.NewRequestListAdaptor;
 import id.ac.its.alpro.merchant.component.Auth;
+import id.ac.its.alpro.merchant.component.Request;
 
 public class NewRequestActivity extends AppCompatActivity {
 
@@ -58,7 +63,10 @@ public class NewRequestActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private TabLayout tabs;
     private int hour, minute;
-    private EditText jamservis;
+    private EditText jamservis, perkiraanharga;
+    String urlAmbil;
+    Dialog myDialog;
+    TextInputLayout jamservis_l, perkiraanharga_l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,12 +246,9 @@ public class NewRequestActivity extends AppCompatActivity {
     }
 
     public void refreshContent() {
-
         broadcast.clear();
         direct.clear();
-
         new AsyncTaskList().execute("hehe");
-
     }
 
     private static class NewRequest{
@@ -272,7 +277,7 @@ public class NewRequestActivity extends AppCompatActivity {
     }
 
     public void ambilRequestHandler(View v) {
-        final Dialog myDialog = new Dialog(this);
+        myDialog = new Dialog(this);
         myDialog.setTitle("Ambil Request");
         myDialog.setContentView(R.layout.dialog_ambil_request);
         myDialog.setCancelable(false);
@@ -280,13 +285,16 @@ public class NewRequestActivity extends AppCompatActivity {
         EditText lokasi = (EditText) myDialog.findViewById(R.id.lokasi_servis);
         EditText jenis_servis = (EditText) myDialog.findViewById(R.id.jenis_servis);
         jamservis = (EditText)myDialog.findViewById(R.id.jam_servis);
+        perkiraanharga = (EditText)myDialog.findViewById(R.id.perkiraan_harga);
+        jamservis_l = (TextInputLayout)myDialog.findViewById(R.id.jam_servis_layout);
+        perkiraanharga_l = (TextInputLayout)myDialog.findViewById(R.id.perkiraan_harga_layout);
         Button ambil = (Button) myDialog.findViewById(R.id.dialog_ambil);
         Button batal = (Button) myDialog.findViewById(R.id.dialog_batal);
-        id.ac.its.alpro.merchant.component.Request request = (id.ac.its.alpro.merchant.component.Request) v.getTag();
-        Log.d("URL", request.getUrlAmbil());
+        Request request = (id.ac.its.alpro.merchant.component.Request) v.getTag();
+        urlAmbil = request.getUrlAmbil();
         nama_customer.setText(request.getNamacustomer());
         lokasi.setText(request.getLokasi());
-        jenis_servis.setText(request.getNamajasa());
+        jenis_servis.setText(request.getTipejasa());
 
         batal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,14 +314,11 @@ public class NewRequestActivity extends AppCompatActivity {
             }
         });
 
-        jamservis.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        ambil.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                final Calendar c = Calendar.getInstance();
-                hour = c.get(Calendar.HOUR_OF_DAY);
-                minute = c.get(Calendar.MINUTE);
-                Dialog tmp = new TimePickerDialog(NewRequestActivity.this, timePickerListener, hour, minute, true);
-                tmp.show();
+            public void onClick(View v) {
+                if(validateHarga() && validateJam())
+                    new AsyncTaskAmbil(jamservis.getText().toString().trim(),perkiraanharga.getText().toString().trim(),myDialog).execute("hehe");
             }
         });
 
@@ -329,4 +334,119 @@ public class NewRequestActivity extends AppCompatActivity {
             jamservis.setText(new StringBuilder().append(hour < 10 ? "0" + hour : hour).append(":").append(minute < 10 ? "0" + minute : minute));
         }
     };
+
+    private class AsyncTaskAmbil extends AsyncTask<String, Integer, Double> {
+        private ProgressDialog dialog;
+        private String jamServis, perkiraanHarga;
+        private int status;
+        private Res result;
+        private Dialog myDialog;
+
+        public AsyncTaskAmbil(String jamServis, String perkiraanHarga, Dialog myDialog){
+            super();
+            dialog = new ProgressDialog(NewRequestActivity.this);
+            this.jamServis = jamServis;
+            this.perkiraanHarga = perkiraanHarga;
+            this.myDialog = myDialog;
+        }
+        @Override
+        protected Double doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            postData();
+            return null;
+        }
+
+        protected void onPostExecute(Double resul) {
+            dialog.dismiss();
+            myDialog.dismiss();
+            if (result.getStatus().equals("success"))
+                Toast.makeText(getApplicationContext(),"Request Berhasil di Ambil, Menunggu Persetujuan Customer",Toast.LENGTH_LONG).show();
+            else if (result.getStatus().equals("failed"))
+                Toast.makeText(getApplicationContext(),"Request Sudah Pernah di Ambil",Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getApplicationContext(),"Request Sudah Tidak Berlaku",Toast.LENGTH_LONG).show();
+            refreshContent();
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Please wait a moment...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        public void postData() {
+            ArrayList<NameValuePair> postParameters;
+            HttpClient httpclient = new DefaultHttpClient();
+            String url = urlAmbil+TOKEN;
+            HttpPost httpPost = new HttpPost(url);
+
+            postParameters = new ArrayList<NameValuePair>();
+            postParameters.add(new BasicNameValuePair("jamservis", jamServis));
+            postParameters.add(new BasicNameValuePair("hargaperkiraan", perkiraanHarga));
+
+            Log.d("URL", url);
+            Log.d("harga",perkiraanHarga);
+
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+                HttpResponse response = httpclient.execute(httpPost);
+                status = response.getStatusLine().getStatusCode();
+                if (status == 200){
+                    Reader reader = new InputStreamReader(response.getEntity().getContent(), "UTF-8");
+                    //Log.d("TES", getStringFromInputStream(reader));
+                    Gson baru = new Gson();
+
+                    result = baru.fromJson(reader, Res.class);
+                    Log.d("Hehe", result.getStatus());
+                }
+            } catch (ClientProtocolException e) {
+            } catch (IOException e) {
+            }
+            finally {
+            }
+        }
+
+        public class Res {
+            String status;
+            public Res(String status) {
+                this.status = status;
+            }
+
+            public String getStatus() {
+                return status;
+            }
+
+            public void setStatus(String status) {
+                this.status = status;
+            }
+
+        }
+    }
+
+    private boolean validateJam(){
+        if (jamservis.getText().toString().trim().isEmpty()) {
+            jamservis_l.setError("Silahkan isi jam terlebih dahulu");
+            return false;
+        } else {
+            jamservis_l.setErrorEnabled(false);
+        }
+        return true;
+    }
+
+    private boolean validateHarga(){
+        if (perkiraanharga.getText().toString().trim().isEmpty()) {
+            perkiraanharga_l.setError("Silahkan isi perkiraan harga terlebih dahulu");
+            return false;
+        } else {
+            perkiraanharga_l.setErrorEnabled(false);
+        }
+        return true;
+    }
 }

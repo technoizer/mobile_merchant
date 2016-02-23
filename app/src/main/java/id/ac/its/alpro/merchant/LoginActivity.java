@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText password;
     TextInputLayout email_l, password_l;
     MySQLiteHelper db;
+    int REQUEST_EXIT = 0, REQUEST_OK = 1, REQUEST_NONE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,6 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         db = new MySQLiteHelper(getApplicationContext());
-        Auth auth = new Auth();
 
         login = (Button)findViewById(R.id.login);
         email = (EditText)findViewById(R.id.email);
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         email_l = (TextInputLayout)findViewById(R.id.layout_email);
         password_l = (TextInputLayout)findViewById(R.id.layout_password);
 
-        auth = db.get(1);
+        Auth auth = db.get(1);
         if(auth.getId() != null && auth.getToken() != null && auth.getStatus() != null && auth.getStatus().equals("success")){
             Intent i = new Intent(this,MainMenuActivity.class);
             i.putExtra("Auth", auth);
@@ -108,12 +108,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -124,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
     private class MyAsyncTask extends AsyncTask<String, Integer, Double> {
         private ProgressDialog dialog;
         private int status = 0;
-        private Result result;
+        private Res result;
 
         public MyAsyncTask(){
             dialog = new ProgressDialog(LoginActivity.this);
@@ -138,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
 
         protected void onPostExecute(Double res) {
             dialog.dismiss();
-            if (status == 200){
+            if (status == 200 && result.getStatus().equals("success")){
                 db = new MySQLiteHelper(getApplicationContext());
                 Auth tmp = db.get(1);
                 Auth auth = new Auth(1,email.getText().toString().trim(),password.getText().toString().trim(), result.getToken(),result.status);
@@ -193,7 +189,7 @@ public class LoginActivity extends AppCompatActivity {
                     //Log.d("TES", getStringFromInputStream(reader));
                     Gson baru = new Gson();
 
-                    result = baru.fromJson(reader, Result.class);
+                    result = baru.fromJson(reader, Res.class);
                     Log.d("Hehe", result.getStatus() + " " + result.getToken());
                 }
             } catch (ClientProtocolException e) {
@@ -204,10 +200,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public class Result{
+    public class Res{
         String status, token;
 
-        public Result(String status, String token) {
+        public Res(String status, String token) {
             this.status = status;
             this.token = token;
         }

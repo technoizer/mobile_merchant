@@ -68,10 +68,10 @@
         android:id="@+id/perkiraan_harga_layout">
         <EditText
             android:id="@+id/perkiraan_harga"
-            android:inputType="textEmailAddress"
+            android:inputType="number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"/>
+            android:hint="Perkiraan Harga"/>
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout

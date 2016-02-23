@@ -59,7 +59,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     public void cekPembayaran(View view) {
-        Intent i = new Intent(getApplicationContext(),NewRequestActivity.class);
+        Intent i = new Intent(getApplicationContext(),HistoryRequestActivity.class);
         i.putExtra("Auth", auth);
         startActivity(i);
     }

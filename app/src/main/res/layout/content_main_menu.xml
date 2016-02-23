@@ -31,26 +31,67 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center">
-            <ImageButton
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButton"
-                android:src="@drawable/phone"
-                android:onClick="requestBaru"/>
-            <ImageButton
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:id="@+id/imageButton"
+                    android:src="@drawable/new_notif"
+                    android:onClick="requestBaru"/>
+                <TextView
+                    android:textStyle="bold"
+                    android:text="Request\nBaru"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="40dp"
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButton1"
-                android:src="@drawable/phone"
-                android:onClick="requestDiterima"/>
-            <ImageButton
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginRight="32dp"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:id="@+id/imageButton1"
+                    android:src="@drawable/received"
+                    android:onClick="requestDiterima"/>
+                <TextView
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:text="Request\nDiterima"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButton2"
-                android:src="@drawable/phone"
-                android:onClick="cekPembayaran"/>
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:id="@+id/imageButton2"
+                    android:src="@drawable/finished"
+                    android:onClick="cekPembayaran"/>
+                <TextView
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:text="History\nRequest"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

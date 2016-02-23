@@ -7,24 +7,27 @@ import java.io.Serializable;
  */
 public class Request implements Serializable {
 
-    private String tanggalrequest, namacustomer, nohp, lokasi, namajasa, catatancustomer, latLng, urlAmbil, jam, tanggalSelesai, catatanPenyediaJasa;
-    private Integer id, hargaPerkiraan, hargaTotal;
+    private String tanggalrequest, namacustomer, nohp, lokasi, tipejasa, catatancustomer, lat, lng, urlAmbil, jamservis, catatanPenyediaJasa , tanggalselesai;
+    private Integer broadcast_id,direct_id, hargaperkiraan, hargatotal, transaksi_id;
 
-    public Request(String tanggalrequest, String namacustomer, String nohp, String lokasi, String namajasa, String catatancustomer, String latLng, String urlAmbil, String jam, String tanggalSelesai, String catatanPenyediaJasa, Integer id, Integer hargaPerkiraan, Integer hargaTotal) {
+    public Request(String tanggalrequest, String namacustomer, String nohp, String lokasi, String tipejasa, String catatancustomer, String lat, String lng, String urlAmbil, String jamservis, String catatanPenyediaJasa, String tanggalselesai, Integer broadcast_id, Integer direct_id, Integer hargaperkiraan, Integer hargatotal, Integer transaksi_id) {
         this.tanggalrequest = tanggalrequest;
         this.namacustomer = namacustomer;
         this.nohp = nohp;
         this.lokasi = lokasi;
-        this.namajasa = namajasa;
+        this.tipejasa = tipejasa;
         this.catatancustomer = catatancustomer;
-        this.latLng = latLng;
+        this.lat = lat;
+        this.lng = lng;
         this.urlAmbil = urlAmbil;
-        this.jam = jam;
-        this.tanggalSelesai = tanggalSelesai;
+        this.jamservis = jamservis;
         this.catatanPenyediaJasa = catatanPenyediaJasa;
-        this.id = id;
-        this.hargaPerkiraan = hargaPerkiraan;
-        this.hargaTotal = hargaTotal;
+        this.tanggalselesai = tanggalselesai;
+        this.broadcast_id = broadcast_id;
+        this.direct_id = direct_id;
+        this.hargaperkiraan = hargaperkiraan;
+        this.hargatotal = hargatotal;
+        this.transaksi_id = transaksi_id;
     }
 
     public String getTanggalrequest() {
@@ -59,12 +62,12 @@ public class Request implements Serializable {
         this.lokasi = lokasi;
     }
 
-    public String getNamajasa() {
-        return namajasa;
+    public String getTipejasa() {
+        return tipejasa;
     }
 
-    public void setNamajasa(String namajasa) {
-        this.namajasa = namajasa;
+    public void setTipejasa(String tipejasa) {
+        this.tipejasa = tipejasa;
     }
 
     public String getCatatancustomer() {
@@ -75,12 +78,20 @@ public class Request implements Serializable {
         this.catatancustomer = catatancustomer;
     }
 
-    public String getLatLng() {
-        return latLng;
+    public String getLat() {
+        return lat;
     }
 
-    public void setLatLng(String latLng) {
-        this.latLng = latLng;
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 
     public String getUrlAmbil() {
@@ -91,20 +102,12 @@ public class Request implements Serializable {
         this.urlAmbil = urlAmbil;
     }
 
-    public String getJam() {
-        return jam;
+    public String getJamservis() {
+        return jamservis;
     }
 
-    public void setJam(String jam) {
-        this.jam = jam;
-    }
-
-    public String getTanggalSelesai() {
-        return tanggalSelesai;
-    }
-
-    public void setTanggalSelesai(String tanggalSelesai) {
-        this.tanggalSelesai = tanggalSelesai;
+    public void setJamservis(String jamservis) {
+        this.jamservis = jamservis;
     }
 
     public String getCatatanPenyediaJasa() {
@@ -115,31 +118,55 @@ public class Request implements Serializable {
         this.catatanPenyediaJasa = catatanPenyediaJasa;
     }
 
-    public Integer getId() {
-        return id;
+    public String getTanggalselesai() {
+        return tanggalselesai;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setTanggalselesai(String tanggalselesai) {
+        this.tanggalselesai = tanggalselesai;
     }
 
-    public Integer getHargaPerkiraan() {
-        return hargaPerkiraan;
+    public Integer getBroadcast_id() {
+        return broadcast_id;
     }
 
-    public void setHargaPerkiraan(Integer hargaPerkiraan) {
-        this.hargaPerkiraan = hargaPerkiraan;
+    public void setBroadcast_id(Integer broadcast_id) {
+        this.broadcast_id = broadcast_id;
     }
 
-    public Integer getHargaTotal() {
-        return hargaTotal;
+    public Integer getDirect_id() {
+        return direct_id;
     }
 
-    public void setHargaTotal(Integer hargaTotal) {
-        this.hargaTotal = hargaTotal;
+    public void setDirect_id(Integer direct_id) {
+        this.direct_id = direct_id;
+    }
+
+    public Integer getHargaperkiraan() {
+        return hargaperkiraan;
+    }
+
+    public void setHargaperkiraan(Integer hargaperkiraan) {
+        this.hargaperkiraan = hargaperkiraan;
+    }
+
+    public Integer getHargatotal() {
+        return hargatotal;
+    }
+
+    public void setHargatotal(Integer hargatotal) {
+        this.hargatotal = hargatotal;
+    }
+
+    public Integer getTransaksi_id() {
+        return transaksi_id;
+    }
+
+    public void setTransaksi_id(Integer transaksi_id) {
+        this.transaksi_id = transaksi_id;
     }
 
     public String toString (){
-        return getId() + " " + getCatatancustomer();
+        return (getBroadcast_id() == null ? getDirect_id(): getBroadcast_id()) + " " + getCatatancustomer();
     }
 }

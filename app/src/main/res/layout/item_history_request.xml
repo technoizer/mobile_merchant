@@ -4,8 +4,7 @@
     android:background="@drawable/cards_bg"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_marginBottom="10dp">
+    android:layout_width="match_parent">
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
@@ -17,7 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Nama pelanggan"
             android:textStyle="bold"
             android:id="@+id/nama_pelanggan" />
@@ -25,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Jenis Service"
             android:id="@+id/jenis_service" />
         <TextView
@@ -34,15 +33,31 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Feb, 15 at 9:09pm"
             android:id="@+id/tanggal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Feb, 15 at 9:09pm"
+            android:id="@+id/tanggal_selesai"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:gravity="center"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/container_atas"
-        android:orientation="horizontal">
+        android:layout_below="@+id/container_atas">
+        <TextView
+            android:id="@+id/harga"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="Rp. 800.000,-"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <LinearLayout
+            android:id="@+id/wrapper"
+            android:layout_toLeftOf="@+id/wrapper2"
             android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,29 +83,9 @@
                 />
         </LinearLayout>
         <LinearLayout
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="30dp"
-                android:scaleType="fitCenter"
-                android:id="@+id/locationButton"
-                android:src="@drawable/pointer"
-                android:layout_marginBottom="0dp"
-                android:background="@null"
-                android:onClick="getCustomerLocation"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:textAlignment="center"
-                android:layout_height="wrap_content"
-                android:text="location"
-                android:textSize="12dp"
-                android:layout_marginTop="4dp"
-                android:textColor="@android:color/darker_gray"/>
-        </LinearLayout>
-        <LinearLayout
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:id="@id/wrapper2"
             android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -115,32 +110,7 @@
                 android:textColor="@android:color/darker_gray"
                 />
         </LinearLayout>
-        <LinearLayout
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="30dp"
-                android:scaleType="fitCenter"
-                android:id="@+id/reportButton"
-                android:src="@drawable/notebook"
-                android:layout_marginBottom="0dp"
-                android:background="@null"
-                android:onClick="makeReport"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:textAlignment="center"
-                android:layout_height="wrap_content"
-                android:text="Report"
-                android:textSize="12dp"
-                android:layout_marginTop="4dp"
-                android:textColor="@android:color/darker_gray"
-                />
-        </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
 
 
