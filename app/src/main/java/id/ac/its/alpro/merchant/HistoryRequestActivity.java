@@ -138,7 +138,7 @@ public class HistoryRequestActivity extends AppCompatActivity {
                 listView.setEmptyView(rootView.findViewById(R.id.empty));
             }
             else{
-                HistoryRequestListAdaptor adaptor = new HistoryRequestListAdaptor(getContext(),R.layout.item_new_request,finishedRequestsList, section);
+                HistoryRequestListAdaptor adaptor = new HistoryRequestListAdaptor(getContext(),R.layout.item_history_request,finishedRequestsList, section);
                 listView.setAdapter(adaptor);
                 listView.setEmptyView(rootView.findViewById(R.id.empty));
             }
@@ -276,7 +276,7 @@ public class HistoryRequestActivity extends AppCompatActivity {
 
         symbols.setGroupingSeparator('.');
         formatter.setDecimalFormatSymbols(symbols);
-        String temp = formatter.format(tmp.getHargaperkiraan().longValue());
+        String temp = formatter.format(tmp.getHargatotal().longValue());
 
         nama_customer.setText(tmp.getNamacustomer());
         lokasi.setText(tmp.getLokasi());

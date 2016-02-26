@@ -228,7 +228,7 @@ public class NewRequestActivity extends AppCompatActivity {
 
                 NewRequest request = baru.fromJson(reader, NewRequest.class);
 
-                Log.d("Hehe", request.getBroadcast().get(0).toString());
+//                Log.d("Hehe", request.getBroadcast().get(0).toString());
                 for (int i = 0; i < request.broadcast.size(); i++){
                     broadcast.add(request.getBroadcast().get(i));
                 }

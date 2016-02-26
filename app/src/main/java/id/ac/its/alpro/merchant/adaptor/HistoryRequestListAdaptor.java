@@ -76,6 +76,7 @@ public class HistoryRequestListAdaptor extends ArrayAdapter<Request> {
             holder.wrapper.setVisibility(View.GONE);
         }
         holder.call.setTag(holder.item);
+        holder.detail.setTag(holder.item);
     }
 
     public static class NewRequestHolder{
