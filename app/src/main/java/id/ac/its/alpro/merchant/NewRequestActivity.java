@@ -217,7 +217,7 @@ public class NewRequestActivity extends AppCompatActivity {
         @TargetApi(Build.VERSION_CODES.KITKAT)
         public void postData() {
             HttpClient httpclient = new DefaultHttpClient();
-            String url = "http://servisin.au-syd.mybluemix.net/api/provider/recentrequest/"+TOKEN;
+            String url = getResources().getString(R.string.url) + "api/provider/recentrequest/"+TOKEN;
             HttpGet httpGet = new HttpGet(url);
             Log.d("URL", url);
 

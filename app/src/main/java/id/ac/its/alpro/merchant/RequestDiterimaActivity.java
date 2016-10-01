@@ -218,7 +218,7 @@ public class RequestDiterimaActivity extends AppCompatActivity {
         @TargetApi(Build.VERSION_CODES.KITKAT)
         public void postData() {
             HttpClient httpclient = new DefaultHttpClient();
-            String url = "http://servisin.au-syd.mybluemix.net/api/provider/terima/"+TOKEN;
+            String url = getResources().getString(R.string.url) + "api/provider/terima/"+TOKEN;
             HttpGet httpGet = new HttpGet(url);
             Log.d("URL", url);
 

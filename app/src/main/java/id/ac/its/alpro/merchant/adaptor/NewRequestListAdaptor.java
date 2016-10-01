@@ -61,12 +61,12 @@ public class NewRequestListAdaptor extends ArrayAdapter<Request> {
         holder.lokasi_servis.setText("Lokasi : " + holder.item.getLokasi());
         if (mode == 1){
             holder.tolak.setVisibility(View.GONE);
-            holder.item.setUrlAmbil("http://servisin.au-syd.mybluemix.net/api/provider/ambilbroadcast/" + holder.item.getBroadcast_id() + "/");
+            holder.item.setUrlAmbil(context.getResources().getString(R.string.url) + "api/provider/ambilbroadcast/" + holder.item.getBroadcast_id() + "/");
             holder.ambil.setTag(holder.item);
         }
         else{
             holder.span.setVisibility(View.GONE);
-            holder.item.setUrlAmbil("http://servisin.au-syd.mybluemix.net/api/provider/ambildirect/" + holder.item.getDirect_id() + "/");
+            holder.item.setUrlAmbil(context.getResources().getString(R.string.url) + "api/provider/ambildirect/" + holder.item.getDirect_id() + "/");
             holder.ambil.setTag(holder.item);
             holder.tolak.setTag(holder.item);
         }

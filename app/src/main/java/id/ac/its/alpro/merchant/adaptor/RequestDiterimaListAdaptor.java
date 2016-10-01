@@ -58,7 +58,7 @@ public class RequestDiterimaListAdaptor extends ArrayAdapter<Request> {
         holder.CustomerLocation.setTag(holder.item);
         holder.makeReport.setTag(holder.item);
         holder.detail.setTag(holder.item);
-        holder.item.setUrlAmbil("http://servisin.au-syd.mybluemix.net/api/provider/finish/isi/" + holder.item.getTransaksi_id());
+        holder.item.setUrlAmbil(context.getResources().getString(R.string.url) + "api/provider/finish/isi/" + holder.item.getTransaksi_id());
     }
 
     public static class NewRequestHolder{

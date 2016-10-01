@@ -209,7 +209,7 @@ public class HistoryRequestActivity extends AppCompatActivity {
         @TargetApi(Build.VERSION_CODES.KITKAT)
         public void postData() {
             HttpClient httpclient = new DefaultHttpClient();
-            String url = "http://servisin.au-syd.mybluemix.net/api/provider/request/unpaid/"+TOKEN;
+            String url = getResources().getString(R.string.url) + "api/provider/request/unpaid/"+TOKEN;
             HttpGet httpGet = new HttpGet(url);
             Log.d("URL", url);
 
@@ -230,7 +230,7 @@ public class HistoryRequestActivity extends AppCompatActivity {
             finally {
             }
 
-            url = "http://servisin.au-syd.mybluemix.net/api/provider/request/history/"+TOKEN;
+            url = getResources().getString(R.string.url) + "api/provider/request/history/"+TOKEN;
             httpGet = new HttpGet(url);
             Log.d("URL", url);
 
